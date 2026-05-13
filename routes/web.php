@@ -12,8 +12,13 @@ Route::get('/invitation/{id?}', function ($id = null) {
     }
 
     try {
-        $authJson = env('GOOGLE_SERVICE_ACCOUNT_JSON');
-        if (!$authJson) throw new \Exception("Environment GOOGLE_SERVICE_ACCOUNT_JSON kosong di Railway!");
+        // MENGGUNAKAN CONFIG (Lebih aman dari cache)
+        $authJson = config('services.google.service_account');
+        if (!$authJson) {
+            throw new \Exception("Konfigurasi Google Service Account tidak terbaca.");
+        }
+
+        $authConfig = json_decode($authJson, true);
 
         $authConfig = json_decode($authJson, true);
         if (isset($authConfig['private_key'])) {
