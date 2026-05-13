@@ -10,7 +10,9 @@
                     </video>
                     <div class="relative text-center text-white p-6">
                         <p class="tracking-[8px] text-yellow-500 mb-4 uppercase text-sm">The Wedding Of</p>
-                        <h1 class="text-6xl font-serif mb-6">Aisyah & Fadil</h1>
+                        <h1 class="text-6xl font-serif mb-6">Aisyah</h1>
+                        <p class="text-2xl font-bold mt-2 text-yellow-400">dan</p>
+                        <h1 class="text-6xl font-serif mb-6">Fadil</h1>
                         <div class="mb-8">
                             <p class="text-sm italic opacity-80">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
                             {{-- Benar --}}

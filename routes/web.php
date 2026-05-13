@@ -59,10 +59,18 @@ Route::get('/invitation/{id?}', function ($id = null) {
             foreach ($values as $row) {
                 // Kolom A ($row[0]) = ID/Nama, Kolom B ($row[1]) = Link
                 if (isset($row[0]) && strtolower(trim($row[0])) === strtolower(trim($id))) {
-                    // Ambil ID sebagai nama, format menjadi Capital Case (aisyah -> Aisyah)
-                    $namaTamu = ucwords(trim($row[0])); 
-                    break;
-                }
+    // Kita tetap mencocokkan ID di Kolom A ($row[0]) dengan ID di URL
+    // Tapi kita mengambil NAMA LENGKAP dari Kolom B ($row[1])
+    
+    $namaTamu = $row[1] ?? ucwords(trim($row[0])); 
+    
+    // Penjelasan: 
+    // $row[1] mengambil data di kolom B.
+    // ?? ucwords(trim($row[0])) adalah cadangan jika kolom B kosong, 
+    // maka ia akan menggunakan ID di kolom A sebagai nama.
+    
+    break;
+}
             }
         }
 
