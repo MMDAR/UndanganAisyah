@@ -59,3 +59,12 @@ Route::get('/invitation/{id?}', function ($id = null) {
 Route::get('/', function () {
     return view('invitation', ['namaTamu' => 'Tamu Undangan']);
 });
+Route::get('/debug-env', function() {
+    $raw = env('GOOGLE_SERVICE_ACCOUNT_JSON');
+    return [
+        'is_empty' => empty($raw),
+        'length' => strlen($raw),
+        'starts_with' => substr($raw, 0, 1),
+        'ends_with' => substr($raw, -1),
+    ];
+});
