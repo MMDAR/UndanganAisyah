@@ -27,3 +27,6 @@ Route::get('/invitation/{id}', function ($id) {
 
     return view('invitation', ['namaTamu' => $namaTamu]);
 });
+Route::get('/', function () {
+    return view('invitation', ['namaTamu' => 'Tamu Undangan']);
+});
