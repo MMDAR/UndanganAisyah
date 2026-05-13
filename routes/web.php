@@ -35,9 +35,10 @@ Route::get('/invitation/{id?}', function ($id = null) {
             foreach ($values as $row) {
                 // Cocokkan ID (Kolom A) dengan {id} di URL
                 if (isset($row[0]) && strtolower(trim($row[0])) === strtolower(trim($id))) {
-                    $namaTamu = $row[1] ?? $row[0]; // Ambil nama dari Kolom B atau A
-                    break;
-                }
+    // UBAH INI: dari $row[1] (Link) menjadi $row[0] (Nama/ID)
+    // Gunakan ucwords() agar "aisyah" otomatis menjadi "Aisyah" (huruf kapital di depan)
+    $namaTamu = ucwords(trim($row[0])); 
+    break;
             }
         }
 
