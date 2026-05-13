@@ -30,3 +30,7 @@ Route::get('/invitation/{id}', function ($id) {
 Route::get('/', function () {
     return view('invitation', ['namaTamu' => 'Tamu Undangan']);
 });
+// Rute tanpa ID (Agar /invitation saja tidak 404)
+Route::get('/invitation', function () {
+    return view('invitation', ['namaTamu' => 'Tamu Undangan']);
+});
