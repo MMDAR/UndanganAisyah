@@ -95,10 +95,23 @@
                     <div class="max-w-md mx-auto px-6" data-aos="fade-up">
                         <h2 class="text-3xl font-serif mb-6 text-yellow-600">Konfirmasi Kehadiran</h2>
                         <p class="mb-8 text-gray-500">Kabar bahagia bagi kami jika Anda dapat hadir.</p>
-                        <a href="https://wa.me/628123456789?text=Halo%20Aisyah%20Fadil,%20Saya%20akan%20hadir"
-                            class="block w-full py-3 bg-green-500 text-white rounded-full font-bold shadow-lg hover:bg-green-600 transition">
-                            Konfirmasi via WhatsApp
-                        </a>
+                    @php
+                        // Memastikan $namaTamu ada, jika tidak ada gunakan 'Tamu Undangan'
+                        $displayNama = $namaTamu ?? 'Tamu Undangan';
+
+                        // Format pesan untuk WhatsApp
+                        $pesanWA = "Halo Aisyah %26 Fadil, Saya " . urlencode($displayNama) . " ingin mengonfirmasi kehadiran saya di acara pernikahan kalian.";
+                        $linkWA = "https://wa.me/6285157702192?text=" . $pesanWA;
+                    @endphp
+
+                    <a href="{{ $linkWA }}" target="_blank"
+                        class="px-6 py-3 bg-green-600 text-white rounded-full font-bold inline-flex items-center gap-2 hover:bg-green-700 transition">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.48s3.481 5.229 3.481 8.406c0 6.555-5.332 11.887-11.888 11.887-2.007 0-3.974-.506-5.717-1.464l-6.269 1.644zm5.046-3.593c1.612.953 3.397 1.456 5.229 1.456 5.728 0 10.391-4.663 10.391-10.391 0-2.775-1.081-5.383-3.043-7.344-1.962-1.961-4.57-3.042-7.348-3.042-5.728 0-10.391 4.663-10.391 10.391 0 1.834.485 3.626 1.403 5.242l-1.041 3.804 3.902-1.023z" />
+                        </svg>
+                        Konfirmasi Kehadiran (RSVP)
+                    </a>
                     </div>
                 </section>
 
