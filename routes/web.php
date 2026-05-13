@@ -5,21 +5,14 @@ use Google\Client;
 use Google\Service\Sheets;
 
 Route::get('/invitation/{id?}', function ($id = null) {
-    $namaTamu = 'Tamu Undangan';
+    // 1. Ambil data dari env secara langsung (sebagai fallback jika config gagal)
+    $authJson = config('services.google.service_account') ?? env('GOOGLE_SERVICE_ACCOUNT_JSON');
 
-    if (!$id) {
-        return view('invitation', ['namaTamu' => $namaTamu]);
+    if (!$authJson) {
+        return "ERROR: Variabel GOOGLE_SERVICE_ACCOUNT_JSON masih kosong di Railway. Pastikan sudah di-Save dan Deploy.";
     }
 
     try {
-        // MENGGUNAKAN CONFIG (Lebih aman dari cache)
-        $authJson = config('services.google.service_account');
-        if (!$authJson) {
-            throw new \Exception("Konfigurasi Google Service Account tidak terbaca.");
-        }
-
-        $authConfig = json_decode($authJson, true);
-
         $authConfig = json_decode($authJson, true);
         if (isset($authConfig['private_key'])) {
             $authConfig['private_key'] = str_replace("\\n", "\n", $authConfig['private_key']);
@@ -36,32 +29,31 @@ Route::get('/invitation/{id?}', function ($id = null) {
         $response = $service->spreadsheets_values->get($spreadsheetId, $range);
         $values = $response->getValues();
 
-        // --- MULAI DEBUG ---
-        if (empty($values)) {
-            throw new \Exception("Data Google Sheets kosong. Cek nama Sheet atau Range!");
-        }
+        $namaTamu = null; // Set null dulu untuk pengecekan akses
 
-        foreach ($values as $row) {
-            // Berdasarkan screenshot Anda:
-            // $row[0] adalah NAMA TAMU (misal: 'aisyah')
-            // $row[1] adalah LINK
-            
-            if (isset($row[0]) && strtolower(trim($row[0])) === strtolower(trim($id))) {
-                // PERBAIKAN: Kita ambil $row[0] (Nama), bukan $row[1] (Link)
-                $namaTamu = $row[0]; 
-                break;
+        if (!empty($values)) {
+            foreach ($values as $row) {
+                // Cocokkan ID (Kolom A) dengan {id} di URL
+                if (isset($row[0]) && strtolower(trim($row[0])) === strtolower(trim($id))) {
+                    $namaTamu = $row[1] ?? $row[0]; // Ambil nama dari Kolom B atau A
+                    break;
+                }
             }
         }
-        // --- SELESAI DEBUG ---
+
+        // --- LOGIKA PEMBATASAN AKSES ---
+        if (!$namaTamu) {
+            // Jika ID tidak ada di spreadsheet, tampilkan halaman "Maaf, akses ditolak"
+            // Atau redirect ke halaman lain
+            return response("Mohon maaf, nama Anda tidak terdaftar dalam daftar tamu kami. Silakan hubungi mempelai.", 403);
+        }
+
+        return view('invitation', ['namaTamu' => $namaTamu]);
 
     } catch (\Exception $e) {
-        // Tampilkan error asli agar kita tahu kenapa gagal (Permission/JSON/Sheet Name)
         return "ERROR GOOGLE API: " . $e->getMessage();
     }
-
-    return view('invitation', ['namaTamu' => $namaTamu]);
-});
-Route::get('/', function () {
+});Route::get('/', function () {
     return view('invitation', ['namaTamu' => 'Tamu Undangan']);
 });
 Route::get('/debug-env', function() {
