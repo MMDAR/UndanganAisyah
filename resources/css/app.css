@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* CSS Global harus di luar @theme */
+html {
+    scroll-behavior: smooth;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+/* Biarkan scrollbar muncul kembali saat sudah dibuka */
+body:not(.overflow-hidden)::-webkit-scrollbar {
+    width: 8px;
+}
+
+body:not(.overflow-hidden)::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+body:not(.overflow-hidden)::-webkit-scrollbar-thumb {
+    background: #D4AF37;
+    border-radius: 10px;
+}
