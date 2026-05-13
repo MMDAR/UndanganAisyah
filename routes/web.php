@@ -10,7 +10,7 @@ Route::get('/invitation', function (Request $request) {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('invitation');
 });
 
 Route::get('/invitation', function () {
