@@ -9,6 +9,11 @@ Route::get('/invitation/{id}', function ($id) {
     try {
         $client = new Client();
         $client->setAuthConfig(json_decode(env('GOOGLE_SERVICE_ACCOUNT_JSON'), true));
+        $authConfig = json_decode(env('GOOGLE_SERVICE_ACCOUNT_JSON'), true);
+        // Tambahkan baris ini untuk memperbaiki format Private Key yang rusak
+if (isset($authConfig['private_key'])) {
+    $authConfig['private_key'] = str_replace("\\n", "\n", $authConfig['private_key']);
+}       $client->setAuthConfig($authConfig);
         $client->addScope(Sheets::SPREADSHEETS_READONLY);
         
         $service = new Sheets($client);
@@ -17,6 +22,15 @@ Route::get('/invitation/{id}', function ($id) {
 
         $response = $service->spreadsheets_values->get($spreadsheetId, $range);
         $values = $response->getValues();
+
+        if (is_null($values)) {
+            dd([
+                "Pesan" => "Data mengembalikan NULL. Cek Izin Share dan Nama Sheet!",
+                "ID_Sheet" => $spreadsheetId,
+                "Range_Dicari" => $range,
+                "Email_Service_Account" => $authConfig['client_email'] ?? 'Tidak terbaca'
+            ]);
+        }
 
         $namaTamu = 'Tamu Undangan';
 
