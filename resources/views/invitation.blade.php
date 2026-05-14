@@ -58,13 +58,13 @@
                         <h2 class="text-5xl font-serif mb-20 text-yellow-600" data-aos="fade-up">Our Journey</h2>
                         <div class="relative border-l-2 border-yellow-200 ml-4 md:ml-0 md:mx-auto text-left">
                             <div class="mb-12 ml-6 pl-8 transition hover:scale-105" data-aos="fade-right">
-                                <span class="absolute -left-[11px] w-5 h-5 bg-yellow-500 rounded-full"></span>
+                                <span class="absolute -left-[11px] w-5 h-5 mt-2 bg-yellow-500 rounded-full"></span>
                                 <h3 class="text-2xl font-bold">First Meet</h3>
                                 <p class="text-yellow-600 font-semibold mb-2">Januari 2019</p>
                                 <p class="text-gray-600">Berawal dari pertemuan tidak sengaja di rumah sakit</p>
                             </div>
                             <div class="mb-12 ml-6 pl-8 transition hover:scale-105" data-aos="fade-left">
-                                <span class="absolute -left-[11px] w-5 h-5 bg-yellow-500 rounded-full"></span>
+                                <span class="absolute -left-[11px] w-5 h-5 mt-2 bg-yellow-500 rounded-full"></span>
                                 <h3 class="text-2xl font-bold">Relationship</h3>
                                 <p class="text-yellow-600 font-semibold mb-2">Maret 2021</p>
                                 <p class="text-gray-600">Kami memutuskan untuk melangkah bersama dalam sebuah komitmen.</p>
