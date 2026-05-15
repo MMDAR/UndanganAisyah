@@ -56,7 +56,8 @@ Route::get('/invitation/{id?}', function ($id = null) {
         }
 
         if (!$namaTamu) {
-            return response("Mohon maaf, nama Anda tidak terdaftar.", 403);
+            // Kita arahkan ke view 'unregistered' yang baru kita buat
+            return response()->view('unregistered', [], 403);
         }
 
         return view('invitation', ['namaTamu' => $namaTamu]);
