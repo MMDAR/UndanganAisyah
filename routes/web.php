@@ -15,7 +15,7 @@ use Google\Service\Sheets;
  * 1. HALAMAN UTAMA
  */
 Route::get('/', function () {
-    return view('invitation', ['namaTamu' => 'Tamu Undangan']);
+    return view('unregistered', ['namaTamu' => 'Tamu Undangan']);
 });
 
 /**
