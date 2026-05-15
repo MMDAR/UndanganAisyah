@@ -42,11 +42,6 @@
             <p class="text-yellow-600/70 text-sm italic mb-10">
                 Jika menurut Anda ini adalah kesalahan, silakan hubungi pihak mempelai untuk konfirmasi lebih lanjut.
             </p>
-
-            <a href="/"
-                class="px-8 py-3 bg-yellow-600 text-black rounded-full font-bold hover:bg-yellow-500 transition shadow-lg">
-                Kembali ke Beranda
-            </a>
         </div>
     </div>
 @endsection
