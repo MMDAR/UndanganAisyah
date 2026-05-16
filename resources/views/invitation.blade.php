@@ -206,7 +206,7 @@
                                                 Insya Allah akan dilaksanakan pada:
                                             </p>
                                             <h2 class="font-wedding text-5xl md:text-6xl text-rose-900" data-aos="fade-up">Minggu, 7 Juni 2026</h2>
-                                            <p class="text-gray-600 italic text-2xl" data-aos="fade-up">Pukul 11:00 WIB-13:00 WIB</p>
+                                            <p class="text-gray-600 italic text-2xl" data-aos="fade-up">Pukul 11:00 - 13:00 WIB</p>
                                             <p class="text-gray-600 italic px-4" data-aos="fade-up">
                                                 Kehadiran dan doa restu Bapak/Ibu/Saudara sekalian sangat berarti bagi kami.<br>Wassalamu’alaikum
                                                 warahmatullahi wabarakatuh
