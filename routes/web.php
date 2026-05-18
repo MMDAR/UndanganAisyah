@@ -23,7 +23,7 @@ Route::get('/', function () {
  */
 Route::get('/invitation/{id?}', function ($id = null) {
     if (!$id) {
-        return view('invitation', ['namaTamu' => 'Tamu Undangan']);
+        return view('invitation', ['namaTamu' => 'Tamu Undangan', 'sesiTamu' => 'Sesi 1']);
     }
 
     try {
@@ -39,28 +39,34 @@ Route::get('/invitation/{id?}', function ($id = null) {
         
         $service = new Sheets($client);
         $spreadsheetId = env('GOOGLE_SHEET_ID');
-        $range = 'Sheet1!A2:B'; 
+        
+        // Diubah menjadi A2:D agar Kolom D (Sesi Acara) ikut terbaca
+        $range = 'Sheet1!A2:D'; 
 
         $response = $service->spreadsheets_values->get($spreadsheetId, $range);
         $values = $response->getValues();
 
         $namaTamu = null;
+        $sesiTamu = 'Sesi 1'; // Default jika kolom kosong
+
         if (!empty($values)) {
             foreach ($values as $row) {
-                // Kolom A = ID, Kolom B = Nama Lengkap
+                // Kolom A = ID, Kolom B = Nama Lengkap, Kolom D = Sesi Acara
                 if (isset($row[0]) && strtolower(trim($row[0])) === strtolower(trim($id))) {
                     $namaTamu = $row[1] ?? ucwords(trim($row[0])); 
+                    // Mengambil nilai Sesi Acara dari Kolom D ($row[3])
+                    $sesiTamu = $row[3] ?? 'Sesi 1';
                     break;
                 }
             }
         }
 
         if (!$namaTamu) {
-            // Kita arahkan ke view 'unregistered' yang baru kita buat
             return response()->view('unregistered', [], 403);
         }
 
-        return view('invitation', ['namaTamu' => $namaTamu]);
+        // Mengirim data namaTamu dan sesiTamu ke view
+        return view('invitation', ['namaTamu' => $namaTamu, 'sesiTamu' => $sesiTamu]);
 
     } catch (\Exception $e) {
         \Log::error("Google Sheets Read Error: " . $e->getMessage());
@@ -70,11 +76,10 @@ Route::get('/invitation/{id?}', function ($id = null) {
 
 /**
  * 3. ROUTE UNTUK UPDATE KEHADIRAN (RSVP)
- * Jalur inilah yang dicari oleh Javascript (AJAX)
  */
 Route::post('/update-attendance', function (Request $request) {
     $idTamu = $request->input('id');
-    $status = $request->input('status'); // Akan menerima 'HADIR' atau 'TIDAK HADIR'
+    $status = $request->input('status');
 
     try {
         $authJson = config('services.google.service_account') ?? env('GOOGLE_SERVICE_ACCOUNT_JSON');
@@ -86,12 +91,11 @@ Route::post('/update-attendance', function (Request $request) {
 
         $client = new Client();
         $client->setAuthConfig($authConfig);
-        $client->addScope(Sheets::SPREADSHEETS); // Izin Full untuk Menulis
+        $client->addScope(Sheets::SPREADSHEETS); 
         
         $service = new Sheets($client);
         $spreadsheetId = env('GOOGLE_SHEET_ID');
 
-        // Cari baris berdasarkan ID di kolom A
         $rangeID = 'Sheet1!A:A';
         $responseID = $service->spreadsheets_values->get($spreadsheetId, $rangeID);
         $valuesID = $responseID->getValues();
@@ -110,7 +114,6 @@ Route::post('/update-attendance', function (Request $request) {
             return response()->json(['success' => false, 'message' => 'ID tidak ditemukan di database.'], 404);
         }
 
-        // Update Kolom H (Kolom ke-8)
         $updateRange = "Sheet1!H{$rowIndex}";
         $body = new Sheets\ValueRange([
             'values' => [[$status]]
