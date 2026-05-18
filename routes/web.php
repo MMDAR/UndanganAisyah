@@ -23,7 +23,7 @@ Route::get('/', function () {
  */
 Route::get('/invitation/{id?}', function ($id = null) {
     if (!$id) {
-        return view('invitation', ['namaTamu' => 'Tamu Undangan', 'sesiTamu' => 'Sesi 1']);
+        return view('invitation', ['namaTamu' => 'Tamu Undangan', 'sesiTamu' => 'Sesi 1', 'kehadiranTamu' => '']);
     }
 
     try {
@@ -40,22 +40,24 @@ Route::get('/invitation/{id?}', function ($id = null) {
         $service = new Sheets($client);
         $spreadsheetId = env('GOOGLE_SHEET_ID');
         
-        // Diubah menjadi A2:D agar Kolom D (Sesi Acara) ikut terbaca
-        $range = 'Sheet1!A2:D'; 
+        // Diubah menjadi A2:I agar Kolom I (Kehadiran) ikut terbaca
+        $range = 'Sheet1!A2:I'; 
 
         $response = $service->spreadsheets_values->get($spreadsheetId, $range);
         $values = $response->getValues();
 
         $namaTamu = null;
-        $sesiTamu = 'Sesi 1'; // Default jika kolom kosong
+        $sesiTamu = 'Sesi 1'; 
+        $kehadiranTamu = ''; // Default kosong (belum konfirmasi)
 
         if (!empty($values)) {
             foreach ($values as $row) {
-                // Kolom A = ID, Kolom B = Nama Lengkap, Kolom D = Sesi Acara
+                // Kolom A = ID, Kolom B = Nama Lengkap, Kolom D = Sesi, Kolom I = Kehadiran
                 if (isset($row[0]) && strtolower(trim($row[0])) === strtolower(trim($id))) {
                     $namaTamu = $row[1] ?? ucwords(trim($row[0])); 
-                    // Mengambil nilai Sesi Acara dari Kolom D ($row[3])
                     $sesiTamu = $row[3] ?? 'Sesi 1';
+                    // Kolom I di dalam array array_values PHP adalah index ke-8
+                    $kehadiranTamu = $row[8] ?? '';
                     break;
                 }
             }
@@ -65,8 +67,12 @@ Route::get('/invitation/{id?}', function ($id = null) {
             return response()->view('unregistered', [], 403);
         }
 
-        // Mengirim data namaTamu dan sesiTamu ke view
-        return view('invitation', ['namaTamu' => $namaTamu, 'sesiTamu' => $sesiTamu]);
+        // Mengirim tambahan variabel kehadiranTamu ke tampilan web
+        return view('invitation', [
+            'namaTamu' => $namaTamu, 
+            'sesiTamu' => $sesiTamu, 
+            'kehadiranTamu' => $kehadiranTamu
+        ]);
 
     } catch (\Exception $e) {
         \Log::error("Google Sheets Read Error: " . $e->getMessage());
@@ -114,6 +120,7 @@ Route::post('/update-attendance', function (Request $request) {
             return response()->json(['success' => false, 'message' => 'ID tidak ditemukan di database.'], 404);
         }
 
+        // PERBAIKAN: Diubah ke Kolom I sesuai dengan struktur asli tabel kamu di foto
         $updateRange = "Sheet1!I{$rowIndex}";
         $body = new Sheets\ValueRange([
             'values' => [[$status]]
