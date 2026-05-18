@@ -114,7 +114,7 @@ Route::post('/update-attendance', function (Request $request) {
             return response()->json(['success' => false, 'message' => 'ID tidak ditemukan di database.'], 404);
         }
 
-        $updateRange = "Sheet1!H{$rowIndex}";
+        $updateRange = "Sheet1!I{$rowIndex}";
         $body = new Sheets\ValueRange([
             'values' => [[$status]]
         ]);
