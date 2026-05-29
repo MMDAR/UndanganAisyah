@@ -276,7 +276,7 @@
                                 <div class="mt-8 pt-8 border-t border-gray-100">
                                     @php
     $pesanWA = "Halo Aisyah %26 Fadil, Saya " . urlencode($namaTamu) . " mengonfirmasi bahwa saya akan hadir di acara pernikahan Anda. Terima kasih!";
-    $linkWA = "https://wa.me/6285157702192?text=" . $pesanWA;
+    $linkWA = "https://wa.me/62895378900537?text=" . $pesanWA;
                                     @endphp
                                     <a href="{{ $linkWA }}" target="_blank"
                                         class="px-6 py-3 bg-green-600 text-white rounded-full font-bold inline-flex items-center gap-2 hover:bg-green-700 transition text-sm">
